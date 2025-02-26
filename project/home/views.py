@@ -4,7 +4,7 @@
 
 from flask import render_template, Blueprint, \
     request, flash, redirect, url_for   # pragma: no cover
-from flask.ext.login import login_required, current_user   # pragma: no cover
+from flask_login import login_required, current_user   # pragma: no cover
 
 from .forms import MessageForm   # pragma: no cover
 from project import db   # pragma: no cover
@@ -26,10 +26,10 @@ home_blueprint = Blueprint(
 
 # use decorators to link the function to a url
 @home_blueprint.route('/', methods=['GET', 'POST'])   # pragma: no cover
-@login_required   # pragma: no cover
+#@login_required   # pragma: no cover
 def home():
     error = None
-    form = MessageForm(request.form)
+    form = MessageForm()
     if form.validate_on_submit():
         new_message = BlogPost(
             form.title.data,

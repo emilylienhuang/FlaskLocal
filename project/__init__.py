@@ -3,9 +3,10 @@
 #################
 
 from flask import Flask
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.bcrypt import Bcrypt
-from flask.ext.login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
+from flask_migrate import Migrate
 import os
 
 ################
@@ -13,11 +14,13 @@ import os
 ################
 
 app = Flask(__name__)
+#Load config from environment with a default fallback
+app.config.from_object(os.getenv('APP_SETTINGS', 'config.DevelopmentConfig'))
 bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
-app.config.from_object(os.environ['APP_SETTINGS'])
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 from project.users.views import users_blueprint
 from project.home.views import home_blueprint
@@ -27,7 +30,7 @@ app.register_blueprint(users_blueprint)
 app.register_blueprint(home_blueprint)
 
 
-from models import User
+from project.models import User
 
 login_manager.login_view = "users.login"
 

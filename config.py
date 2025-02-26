@@ -1,24 +1,15 @@
+from dotenv import load_dotenv
 import os
+load_dotenv()
 
-
-# default config
-class BaseConfig(object):
-    DEBUG = False
-    # shortened for readability
-    SECRET_KEY = '\xbf\xb0\x11\xb1\xcd\xf9\xba\x8bp\x0c...'
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
-
-
-class TestConfig(BaseConfig):
-    DEBUG = True
-    TESTING = True
-    WTF_CSRF_ENABLED = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
-
+class BaseConfig:
+    SECRET_KEY = os.getenv('SECRET_KEY', 'mysecretkey')  # Set a default secret key
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///db.sqlite3')  # Fallback to SQLite if missing
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
 
-
 class ProductionConfig(BaseConfig):
     DEBUG = False
+
